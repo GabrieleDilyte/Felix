@@ -1,0 +1,24 @@
+.MovieCard {
+  width: 25vw;
+  background: var(--gray);
+  color: var(--light);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  min-width: 300px;
+}
+
+.MovieCard__content--title {
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.MovieCard__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 20px 14px 20px;
+  margin-top: -200px;
+  background: var(--gray);
+  height: 50%;
+}

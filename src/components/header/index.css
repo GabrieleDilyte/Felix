@@ -1,0 +1,17 @@
+.header {
+  height: 70px;
+  background: var(--black);
+}
+
+.header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin: 0 20px;
+}
+
+.logo {
+  height: 32px;
+  width: 16px;
+}
