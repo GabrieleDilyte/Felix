@@ -28,7 +28,11 @@ function App() {
           <Route
             path="/content"
             element={
-              <Content favorite={favorite} toggleFavorite={toggleFavorite} />
+              <Content
+                favorite={favorite}
+                toggleFavorite={toggleFavorite}
+                user={user}
+              />
             }
           />
         </Routes>

@@ -1,49 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import MovieCard from "../components/movie_card";
 
 import "../App.css";
 
-class Content extends React.Component {
-  state = { movies: [] };
+function Content({ favorite, toggleFavorite, user }) {
+  const [movies, setMovies] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     fetch("https://academy-video-api.herokuapp.com/content/items", {
       headers: {
-        authorization: localStorage.getItem("user"),
+        authorization: user,
       },
     })
       .then((res) => res.json())
       .then((result) => {
-        this.setState({ movies: result });
+        setMovies(result);
       })
       .catch((err) => console.log(err));
-  }
+  }, [user]);
 
-  render() {
-    const { movies } = this.state;
-    const { favorite, toggleFavorite } = this.props;
-
-    return (
-      <>
-        <div className="MovieList">
-          <div className="MovieList__content">
-            {movies.map(({ image, title, description, id }) => (
-              <MovieCard
-                key={id}
-                id={id}
-                img={image}
-                title={title}
-                about={description}
-                toggleFavorite={toggleFavorite}
-                favorite={favorite}
-              />
-            ))}
-          </div>
+  return (
+    <>
+      <div className="MovieList">
+        <div className="MovieList__content">
+          {movies.map(({ image, title, description, id }) => (
+            <MovieCard
+              key={id}
+              id={id}
+              img={image}
+              title={title}
+              about={description}
+              toggleFavorite={toggleFavorite}
+              favorite={favorite}
+            />
+          ))}
         </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 }
 
 export default Content;
