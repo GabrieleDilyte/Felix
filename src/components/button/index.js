@@ -1,32 +1,20 @@
-import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import "./index.css";
 
-function Button({ isLarge, children, isFavorite }) {
-  const [style, setStyle] = useState("");
-
-  function favorite(e) {
-    if (style.length) {
-      setStyle("");
-    } else {
-      setStyle("button--ghost");
-    }
-  }
+function Button({ isLarge, children, isFavorite, to, onClick = () => {} }) {
+  const Component = typeof to === "string" ? Link : "button";
 
   const className = "button".concat(
     isLarge ? " button--large" : "",
-    style.length ? " " + style : ""
+    isFavorite ? " button--ghost" : ""
   );
 
-  if (isFavorite) {
-    return (
-      <button className={className} onClick={favorite}>
-        {style.length ? "Remove 💔" : children}
-      </button>
-    );
-  } else {
-    return <button className={className}>{children}</button>;
-  }
+  return (
+    <Component to={to} className={className} onClick={onClick}>
+      {children}
+    </Component>
+  );
 }
 
 export default Button;

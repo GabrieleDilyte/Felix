@@ -1,56 +1,40 @@
-import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 
-import Header from "./components/header";
-import Banner from "./components/banner";
-import Footer from "./components/footer";
-import MovieCard from "./components/movie_card";
-import Button from "./components/button";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Content from "./pages/content";
 
-import "./App.css";
+import Layout from "./components/layout";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: [],
-    };
-  }
+function App() {
+  const [favorite, toggleFavorite] = useState([]);
+  const [user, setUser] = useState();
 
-  componentDidMount() {
-    fetch("https://academy-video-api.herokuapp.com/content/free-items")
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({ movies: result });
-      })
-      .catch((err) => console.log(err));
-  }
-
-  render() {
-    const { movies } = this.state;
-
-    return (
-      <div className="App">
-        <Header></Header>
-        <main>
-          <Banner></Banner>
-          <div className="MovieList">
-            <div className="MovieList__content">
-              {movies.map(({ image, title, description, id }) => (
-                <MovieCard
-                  key={id}
-                  img={image}
-                  title={title}
-                  about={description}
-                ></MovieCard>
-              ))}
-            </div>
-            <Button isLarge>Get More Content</Button>
-          </div>
-        </main>
-        <Footer></Footer>
-      </div>
-    );
-  }
+  return (
+    <BrowserRouter>
+      <Layout user={user}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home favorite={favorite} toggleFavorite={toggleFavorite} />
+            }
+          />
+          <Route
+            path="/login"
+            element={<Login user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/content"
+            element={
+              <Content favorite={favorite} toggleFavorite={toggleFavorite} />
+            }
+          />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 }
 
 export default App;

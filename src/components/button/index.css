@@ -10,6 +10,12 @@
   border: none;
 }
 
+a.button {
+  text-decoration: none;
+  height: 19px;
+  display: inline-block;
+}
+
 .button--large {
   height: 40px;
   padding: 11px 34px;

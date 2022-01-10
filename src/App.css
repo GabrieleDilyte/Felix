@@ -3,6 +3,9 @@
   /* max-width: 1120px; */
   margin: 0 auto;
   background: var(--gray);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .MovieList {
@@ -17,4 +20,31 @@
   justify-items: center;
   row-gap: 48px;
   margin-bottom: 68px;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  margin: 172px;
+}
+
+.login_form {
+  background-color: var(--lightGray);
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0 40px 0;
+  border-radius: 10px;
+}
+
+.login_form__input {
+  height: 40px;
+  width: 400px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
 }
