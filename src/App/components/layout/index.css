@@ -1,0 +1,9 @@
+.App {
+  min-height: 100vh;
+  /* max-width: 1120px; */
+  margin: 0 auto;
+  background: var(--gray);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

@@ -1,14 +1,14 @@
 import React, { useCallback, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import Button from "../components/button";
+import Button from "../../components/button";
 
-import "../App.css";
+import "./index.css";
 
 function Login({ user, setUser }) {
   const [error, setError] = useState("");
 
-  const handleSubmit = useCallback(async (event, setUser) => {
+  const handleSubmit = useCallback(async (event, setUser, setError) => {
     event.preventDefault();
 
     const user = {
@@ -21,7 +21,12 @@ function Login({ user, setUser }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 400) {
+          throw new Error("Failure: please check the login details");
+        }
+        return res.json();
+      })
       .then((result) => {
         setUser(result.token);
         localStorage.setItem("user", result.token);
@@ -31,9 +36,10 @@ function Login({ user, setUser }) {
 
   return (
     <div className="login">
+      {user && <Navigate to="/content" />}
       <form
         className="login_form"
-        onSubmit={(event) => handleSubmit(event, setUser)}
+        onSubmit={(event) => handleSubmit(event, setUser, setError)}
       >
         <div>
           <label htmlFor="username">Username </label>
@@ -56,11 +62,10 @@ function Login({ user, setUser }) {
             required
           ></input>
         </div>
+        {error && <p className="errorMessage">{error}</p>}
         <div>
           <Button>Sign In</Button>
         </div>
-        {error && <p>{error}</p>}
-        {user && <Navigate to="/content" />}
       </form>
     </div>
   );

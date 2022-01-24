@@ -24,3 +24,11 @@ p {
   font-size: 16px;
   line-height: 19px;
 }
+
+.loading,
+.error {
+  display: inline-block;
+  width: 100vw;
+  color: white;
+  text-align: center;
+}

@@ -1,0 +1,13 @@
+.MovieList {
+  background: var(--black);
+  text-align: center;
+  padding: 48px 0 68px 0;
+}
+
+.MovieList__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  row-gap: 48px;
+  margin-bottom: 68px;
+}
