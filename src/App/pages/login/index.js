@@ -1,46 +1,42 @@
-import React, { useCallback, useState } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useCallback, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import auth from "../../../auth";
 
 import Button from "../../components/button";
 
 import "./index.css";
 
-function Login({ user, setUser }) {
-  const [error, setError] = useState("");
+function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const error = useSelector(auth.selectors.getError);
+  const isLoggedIn = useSelector(auth.selectors.isLoggedIn);
 
-  const handleSubmit = useCallback(async (event, setUser, setError) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
 
-    const user = {
-      username: event.target[0].value,
-      password: event.target[1].value,
-    };
+      const user = {
+        username: event.target[0].value,
+        password: event.target[1].value,
+      };
 
-    fetch("https://academy-video-api.herokuapp.com/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.status === 400) {
-          throw new Error("Failure: please check the login details");
-        }
-        return res.json();
-      })
-      .then((result) => {
-        setUser(result.token);
-        localStorage.setItem("user", result.token);
-      })
-      .catch((err) => setError(err.message));
-  }, []);
+      dispatch(auth.actions.login(user));
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="login">
-      {user && <Navigate to="/content" />}
-      <form
-        className="login_form"
-        onSubmit={(event) => handleSubmit(event, setUser, setError)}
-      >
+      <form className="login_form" onSubmit={(event) => handleSubmit(event)}>
         <div>
           <label htmlFor="username">Username </label>
           <br />

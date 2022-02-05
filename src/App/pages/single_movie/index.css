@@ -23,3 +23,14 @@
   height: 50%;
   margin-left: 26px;
 }
+
+iframe {
+  width: 120vh;
+  height: calc(120vh / 16 * 9);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -60vh; /* Negative half of height. */
+  margin-top: calc(-120vh / 16 * 9 / 2);
+  background-color: rgba(0, 0, 0, 0.5);
+}

@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import Button from "../button";
-import { connect } from "react-redux";
+
+import content from "../../../content";
 
 import "./index.css";
 
-function MovieCard({ id, img, title, about, isFavorite, toggleFavorite }) {
+function MovieCard({ id, img, title, about, toggleFavorite }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isFavorite = useSelector(state => content.selectors.isFavorite(state, id));
 
   return (
     <div className="MovieCard">
@@ -35,7 +39,7 @@ function MovieCard({ id, img, title, about, isFavorite, toggleFavorite }) {
           <Button
             isFavorite={isFavorite}
             onClick={() => {
-              toggleFavorite(id);
+              dispatch(content.actions.toggleFavorite(id));
             }}
           >
             {isFavorite ? "Remove 💔" : "Favorite"}
@@ -46,16 +50,4 @@ function MovieCard({ id, img, title, about, isFavorite, toggleFavorite }) {
   );
 }
 
-function mapStateToProps({ content }, { id }) {
-  return {
-    isFavorite: content.favorites.includes(id),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    toggleFavorite: (id) => dispatch({ type: "CONTENT/TOGGLE_FAVORITE", id }),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MovieCard);
+export default MovieCard;

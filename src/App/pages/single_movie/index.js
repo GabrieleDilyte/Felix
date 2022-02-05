@@ -1,43 +1,40 @@
-import { useCallback, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+
+import content from "../../../content";
 
 import Button from "../../components/button";
 
 import "./index.css";
 
-function SingleMovie({ movies, toggleFavorite, favorites }) {
+function SingleMovie() {
+  const dispatch = useDispatch();
+  const [shown, setShown] = useState(false);
   const { movieId } = useParams();
-
-  const [movie, setMovie] = useState(movies.find(({ id }) => id === movieId));
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const isFavorite = favorites.includes(movieId);
-
-  const getMovie = useCallback(async () => {
-    setLoading(true);
-    try {
-      const result = await fetch(
-        `https://academy-video-api.herokuapp.com/content/items/${movieId}`
-      );
-      const data = await result.json();
-      if (result.ok) {
-        setMovie(data);
-      }
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [movieId]);
+  const movie = useSelector(state => content.selectors.getMovieById(state, movieId));
+  const loading = useSelector(content.selectors.getMoviesLoading);
+  const error = useSelector(content.selectors.getMoviesError);
+  const isFavorite = useSelector(state => content.selectors.isFavorite(state, movieId));
 
   useEffect(() => {
     if (!movie) {
-      console.log("fetching");
-      getMovie();
+      dispatch(content.actions.getMovies());
     }
-  }, [getMovie, movie]);
+  }, [dispatch, movie]);
+
+  const VideoModal = () => {
+    return (
+      <div>
+        <iframe
+          title={movie.title}
+          src={movie.video}
+          frameBorder="0"
+          allowFullScreen
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -57,11 +54,11 @@ function SingleMovie({ movies, toggleFavorite, favorites }) {
               <p className="SingleMovie__content--about">{movie.description}</p>
             </div>
             <div className="SingleMovie__content--buttons">
-              <Button>Watch ▶</Button>
+              <Button onClick={() => setShown(!shown)}>Watch ▶</Button>
               <Button
                 isFavorite={isFavorite}
                 onClick={() => {
-                  toggleFavorite(movieId);
+                  dispatch(content.actions.toggleFavorite(movieId))
                 }}
               >
                 {isFavorite ? "Remove 💔" : "Favorite"}
@@ -70,21 +67,9 @@ function SingleMovie({ movies, toggleFavorite, favorites }) {
           </div>
         </div>
       )}
+      {shown ? <VideoModal /> : null}
     </>
   );
 }
 
-function mapStateToProps({ content }) {
-  return {
-    movies: content.movies.list,
-    favorites: content.favorites,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    toggleFavorite: (id) => dispatch({ type: "CONTENT/TOGGLE_FAVORITE", id }),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SingleMovie);
+export default SingleMovie;
