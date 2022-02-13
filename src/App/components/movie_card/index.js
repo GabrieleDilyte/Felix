@@ -1,16 +1,21 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 
 import Button from "../button";
 
-import content from "../../../content";
+import { AuthContext, ContentContext } from "../../context";
 
 import "./index.css";
 
-function MovieCard({ id, img, title, about, toggleFavorite }) {
+function MovieCard({ id, img, title, about }) {
+  const { user } = useContext(AuthContext);
+  const { favorites, toggleFavorites } = useContext(ContentContext);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isFavorite = useSelector(state => content.selectors.isFavorite(state, id));
+  const isFavorite = favorites.includes(id);
+
+  const onClick = () => {
+    user && navigate(`/content/${id}`);
+  };
 
   return (
     <div className="MovieCard">
@@ -18,20 +23,14 @@ function MovieCard({ id, img, title, about, toggleFavorite }) {
         src={img}
         alt={title}
         className="MovieCard--img"
-        onClick={() => navigate(`/content/${id}`)}
+        onClick={onClick}
       ></img>
       <div className="MovieCard__content">
         <div>
-          <h3
-            className="MovieCard__content--title"
-            onClick={() => navigate(`/content/${id}`)}
-          >
+          <h3 className="MovieCard__content--title" onClick={onClick}>
             {title}
           </h3>
-          <p
-            className="MovieCard__content--about"
-            onClick={() => navigate(`/content/${id}`)}
-          >
+          <p className="MovieCard__content--about" onClick={onClick}>
             {about}
           </p>
         </div>
@@ -39,7 +38,7 @@ function MovieCard({ id, img, title, about, toggleFavorite }) {
           <Button
             isFavorite={isFavorite}
             onClick={() => {
-              dispatch(content.actions.toggleFavorite(id));
+              toggleFavorites(id);
             }}
           >
             {isFavorite ? "Remove 💔" : "Favorite"}

@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useContext, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import auth from "../../../auth";
+import { AuthContext } from "../../context";
 
 import Button from "../../components/button";
 
 import "./index.css";
 
 function Login() {
-  const dispatch = useDispatch();
+  const { user, error, login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const error = useSelector(auth.selectors.getError);
-  const isLoggedIn = useSelector(auth.selectors.isLoggedIn);
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -22,17 +19,16 @@ function Login() {
         username: event.target[0].value,
         password: event.target[1].value,
       };
-
-      dispatch(auth.actions.login(user));
+      login(user);
     },
-    [dispatch]
+    [login]
   );
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (!!user) {
       navigate("/");
     }
-  }, [isLoggedIn, navigate]);
+  }, [user, navigate]);
 
   return (
     <div className="login">

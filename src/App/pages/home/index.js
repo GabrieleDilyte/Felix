@@ -1,33 +1,29 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useContext, useEffect } from "react";
+
+import { AuthContext, ContentContext } from "../../context";
 
 import Banner from "../../components/banner";
 import MovieCard from "../../components/movie_card";
 import Button from "../../components/button";
 
-import content from "../../../content";
-import auth from "../../../auth";
-
 import "./index.css";
 
 function Home() {
-  const dispatch = useDispatch();
-  const movies = useSelector(content.selectors.getMovies);
-  const loading = useSelector(content.selectors.getMoviesLoading);
-  const error = useSelector(content.selectors.getMoviesError);
-  const isLoggedIn = useSelector(auth.selectors.isLoggedIn);
+  const { user } = useContext(AuthContext);
+  const { movies, error, moviesLoading, getMovies } =
+    useContext(ContentContext);
 
   useEffect(() => {
-    dispatch(content.actions.getMovies());
-  }, [dispatch]);
+    getMovies();
+  }, [getMovies]);
 
   return (
     <>
-      {isLoggedIn ? null : <Banner />}
+      {user ? null : <Banner />}
       <div className="MovieList">
         <div className="MovieList__content">
           {error && <p className="error">{error}</p>}
-          {loading && <p className="loading">Loading</p>}
+          {moviesLoading && <p className="loading">Loading</p>}
           {movies.map(({ image, title, description, id }) => (
             <MovieCard
               key={id}
@@ -38,7 +34,7 @@ function Home() {
             />
           ))}
         </div>
-        {isLoggedIn ? null : <Button isLarge>Get More Content</Button>}
+        {user ? null : <Button isLarge>Get More Content</Button>}
       </div>
     </>
   );

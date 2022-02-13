@@ -1,7 +1,7 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 
-import auth from "../../../auth";
+import { AuthContext } from "../../context";
 
 import Button from "../button";
 
@@ -10,9 +10,8 @@ import logo from "../../img/F.png";
 import "./index.css";
 
 function Header() {
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector(auth.selectors.isLoggedIn);
 
   return (
     <header className="header">
@@ -23,8 +22,8 @@ function Header() {
           className="logo"
           onClick={() => navigate("./")}
         />
-        {isLoggedIn ? (
-          <Button isLarge to="/" onClick={() => dispatch(auth.actions.logout())}>
+        {user ? (
+          <Button isLarge to="/" onClick={() => logout()}>
             Log Out
           </Button>
         ) : (
